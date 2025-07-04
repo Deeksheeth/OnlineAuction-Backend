@@ -7,6 +7,7 @@ import auction.com.example.OnlineAucSpring.Repository.UserRepo;
 import auction.com.example.OnlineAucSpring.exception.APIException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +21,16 @@ public class UserServiceImp implements UserService{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO,User.class);
         User userFromDB = userRepo.findByUserName(user.getUserName());
         if(userFromDB != null)
             throw new APIException("User with the name "+user.getUserName()+" already exists");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User saveUser =userRepo.save(user);
         return modelMapper.map(saveUser, UserDTO.class);
     }
