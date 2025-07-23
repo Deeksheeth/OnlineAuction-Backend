@@ -37,4 +37,16 @@ public class AuctionController {
         AuctionRequest deletedAuction = auctionService.deleteAuction(aucId);
         return new ResponseEntity<>(deletedAuction,HttpStatus.OK);
     }
+
+    @GetMapping("admin/category/{categoryId}")
+    public ResponseEntity<AuctionResponse> getAuctionsByCategory(@PathVariable Long categoryId) {
+        AuctionResponse auctions = auctionService.getAuctionByCategory(categoryId);
+        return new ResponseEntity<>(auctions,HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuctionResponse> getAuctionById(@PathVariable Long id) {
+        AuctionResponse auctionResponse =  auctionService.getAuctionByID(id);
+        return new ResponseEntity<>(auctionResponse,HttpStatus.OK);
+    }
 }

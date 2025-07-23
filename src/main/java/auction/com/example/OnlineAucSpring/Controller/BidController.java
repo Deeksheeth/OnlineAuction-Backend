@@ -9,17 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/public/bids")
 public class BidController {
     @Autowired
     private BidService bidService;
 
-    @PostMapping("/api/public/bids")
+    @PostMapping("/place")
     public ResponseEntity<BidResponseDTO> placingBid(@RequestBody BidRequestDTO requestDTO){
         BidResponseDTO bidResponseDTO = bidService.placeBid(requestDTO);
         return new ResponseEntity<>(bidResponseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/public/bids/auction/{auctionId}")
+    @GetMapping("view/{auctionId}")
     public ResponseEntity<BidResponseDTO> viewBids(@PathVariable Long auctionId){
         BidResponseDTO bidResponseDTO = bidService.viewBidsForAuction(auctionId);
         return new ResponseEntity<>(bidResponseDTO,HttpStatus.OK);

@@ -25,6 +25,13 @@ public class MyGlobalException {
         return new ResponseEntity<Map<String,String>>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalMethodException.class)
+    public ResponseEntity<APIResponse> handleIllegalState(IllegalMethodException e) {
+        String message = e.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<APIResponse>(apiResponse,HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ResponseNotFoundException.class)
     public ResponseEntity<APIResponse> myMethodNotFoundException(ResponseNotFoundException e){
         String message = e.getMessage();

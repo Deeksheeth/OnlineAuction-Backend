@@ -1,9 +1,6 @@
 package auction.com.example.OnlineAucSpring.config;
 
-import auction.com.example.OnlineAucSpring.Model.User;
-import auction.com.example.OnlineAucSpring.Repository.UserRepo;
 import auction.com.example.OnlineAucSpring.Service.CustomUserDetailsService;
-import auction.com.example.OnlineAucSpring.Service.UserServiceImp;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

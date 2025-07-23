@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuctionServiceImp implements AuctionService{
@@ -85,5 +87,31 @@ public class AuctionServiceImp implements AuctionService{
                 .orElseThrow(() ->new ResponseNotFoundException("Auction","auctionId",aucID));
         auctionRepository.delete(auctionFromDb);
         return modelMapper.map(auctionFromDb,AuctionRequest.class);
+    }
+
+    @Override
+    public AuctionResponse getAuctionByCategory(Long categoryId) {
+        List<Auction> auctions = auctionRepository.findAll().stream()
+                .filter(a-> a.getCategory().getId().equals(categoryId))
+                .collect(Collectors.toList());
+        List<AuctionRequest> auctionRequests = auctions.stream()
+                .map(auction -> modelMapper.map(auction,AuctionRequest.class))
+                .toList();
+        AuctionResponse auctionResponse = new AuctionResponse();
+        auctionResponse.setContent(auctionRequests);
+        return auctionResponse;
+    }
+
+    @Override
+    public AuctionResponse getAuctionByID(Long aucId) {
+        Auction auctions = auctionRepository.findById(aucId)
+                .orElseThrow(()-> new ResponseNotFoundException("Auction","auctionID",aucId));
+        List<Auction> auctionList = List.of(auctions);
+        List<AuctionRequest> auctionRequest = auctionList.stream()
+                .map(a->modelMapper.map(a,AuctionRequest.class))
+                .toList();
+        AuctionResponse auctionResponse = new AuctionResponse();
+        auctionResponse.setContent(auctionRequest);
+        return auctionResponse;
     }
 }
