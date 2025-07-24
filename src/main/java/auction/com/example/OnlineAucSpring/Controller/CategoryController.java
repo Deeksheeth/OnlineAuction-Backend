@@ -1,31 +1,1 @@
-package auction.com.example.OnlineAucSpring.Controller;
-
-import auction.com.example.OnlineAucSpring.Dtos.CategoryRequest;
-import auction.com.example.OnlineAucSpring.Dtos.CategoryResponse;
-import auction.com.example.OnlineAucSpring.Dtos.UserDTO;
-import auction.com.example.OnlineAucSpring.Service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
-
-    @PostMapping("/api/public/categories")
-    public ResponseEntity<CategoryRequest> createCategory(@RequestBody CategoryRequest categoryRequest){
-        CategoryRequest categoryRequest1 = categoryService.createCategory(categoryRequest);
-        return new ResponseEntity<>(categoryRequest, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/api/public/categories")
-    public ResponseEntity<CategoryResponse> getCategory() {
-        CategoryResponse categoryResponse = categoryService.getAllCategories();
-        return new ResponseEntity<>(categoryResponse,HttpStatus.OK);
-    }
-}
+package auction.com.example.OnlineAucSpring.Controller;import auction.com.example.OnlineAucSpring.Dtos.CategoryRequest;import auction.com.example.OnlineAucSpring.Dtos.CategoryResponse;import auction.com.example.OnlineAucSpring.Dtos.UserDTO;import auction.com.example.OnlineAucSpring.Service.CategoryService;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.http.HttpStatus;import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.GetMapping;import org.springframework.web.bind.annotation.PostMapping;import org.springframework.web.bind.annotation.RequestBody;import org.springframework.web.bind.annotation.RestController;@RestControllerpublic class CategoryController {    @Autowired    private CategoryService categoryService;    @PostMapping("/api/public/categories")    public ResponseEntity<CategoryRequest> createCategory(@RequestBody CategoryRequest categoryRequest){        CategoryRequest categoryRequest1 = categoryService.createCategory(categoryRequest);        return new ResponseEntity<>(categoryRequest, HttpStatus.CREATED);    }    @GetMapping("/api/public/categories")    public ResponseEntity<CategoryResponse> getCategory() {        CategoryResponse categoryResponse = categoryService.getAllCategories();        return new ResponseEntity<>(categoryResponse,HttpStatus.OK);    }}
