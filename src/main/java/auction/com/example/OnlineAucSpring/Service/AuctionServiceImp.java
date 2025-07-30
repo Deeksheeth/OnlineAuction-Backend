@@ -8,6 +8,7 @@ import auction.com.example.OnlineAucSpring.Model.User;
 import auction.com.example.OnlineAucSpring.Repository.AuctionRepository;
 import auction.com.example.OnlineAucSpring.Repository.CategoryRepository;
 import auction.com.example.OnlineAucSpring.Repository.UserRepo;
+import auction.com.example.OnlineAucSpring.config.JwtUtil;
 import auction.com.example.OnlineAucSpring.exception.ResponseNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,18 @@ public class AuctionServiceImp implements AuctionService{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
-    public AuctionRequest createAuction(Long categoryId, AuctionRequest auctionRequest) {
+    public AuctionRequest createAuction(Long categoryId, AuctionRequest auctionRequest,String token) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow( ()-> new ResponseNotFoundException("Category","categoryName",categoryId));
-        if (auctionRequest.getOwnerID() == null) {
-            throw new IllegalArgumentException("Owner ID cannot be null");
-        }
-        User owner = userRepo.findById(auctionRequest.getOwnerID())
+        String email = jwtUtil.extractEmail(token);
+//        if (auctionRequest.getOwnerID() == null) {
+//            throw new IllegalArgumentException("Owner ID cannot be null");
+//        }
+        User owner = userRepo.findByEmail(email)
                 .orElseThrow( ()-> new ResponseNotFoundException("User","id", auctionRequest.getOwnerID()));
 
         Auction auction = modelMapper.map(auctionRequest,Auction.class);
@@ -51,6 +56,7 @@ public class AuctionServiceImp implements AuctionService{
         Auction savedAuction = auctionRepository.save(auction);
         return modelMapper.map(savedAuction,AuctionRequest.class);
     }
+
 
     @Override
     public AuctionResponse viewAuction() {
@@ -77,6 +83,7 @@ public class AuctionServiceImp implements AuctionService{
         auctionFromDB.setStartTime(auction.getStartTime());
         auctionFromDB.setEndTime(auction.getEndTime());
         auctionFromDB.setOwner(owner);
+        auctionFromDB.setCurrentPrice(auction.getCurrentPrice());
         Auction savedAuction = auctionRepository.save(auctionFromDB);
         return modelMapper.map(savedAuction,AuctionRequest.class);
     }

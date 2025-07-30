@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "8lnw/M5ID+s6PfXe87C++5ZsJ+OLd0k5FzEtRSyJjbzK1/bSI8kXTZ8bOG45FJyQaCErKOqzBB7m3mGNuS5p4w=="; //paste-your-base64-string-here
+    private static final String SECRET = "8lnw/M5ID+s6PfXe87C++5ZsJ+OLd0k5FzEtRSyJjbzK1/bSI8kXTZ8bOG45FJyQaCErKOqzBB7m3mGNuS5p4w=="; //pasted-the-base64-string-here
     private static final SecretKey KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET));
 
     public String generateToken(String email) {

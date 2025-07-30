@@ -15,8 +15,11 @@ public class AuctionController {
     private AuctionService auctionService;
 
     @PostMapping("admin/categories/{categoryID}/auction")
-    public ResponseEntity<AuctionRequest> createAuctions(@RequestBody AuctionRequest auctionRequest,@PathVariable Long categoryID){
-        AuctionRequest savedAuction = auctionService.createAuction(categoryID,auctionRequest);
+    public ResponseEntity<AuctionRequest> createAuctions(@RequestHeader("Authorization") String token,
+            @RequestBody AuctionRequest auctionRequest, @PathVariable Long categoryID) {
+        token = token.substring(7);
+
+        AuctionRequest savedAuction = auctionService.createAuction(categoryID, auctionRequest, token);
         return new ResponseEntity<>(savedAuction, HttpStatus.CREATED);
     }
 

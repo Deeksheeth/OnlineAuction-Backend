@@ -2,6 +2,7 @@ package auction.com.example.OnlineAucSpring.Controller;
 
 import auction.com.example.OnlineAucSpring.Dtos.AuthRequestDTO;
 import auction.com.example.OnlineAucSpring.Dtos.AuthResponse;
+import auction.com.example.OnlineAucSpring.Dtos.RegisterRequestDTO;
 import auction.com.example.OnlineAucSpring.Model.Role;
 import auction.com.example.OnlineAucSpring.Model.User;
 import auction.com.example.OnlineAucSpring.Repository.UserRepo;
@@ -29,9 +30,12 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/api/auth/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER); // default role
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO requestDTO) {
+        User user = new User();
+        user.setUserName(requestDTO.getUserName());
+        user.setEmail(requestDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        user.setRole(requestDTO.getRole() != null ? requestDTO.getRole() : Role.USER);
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
@@ -48,11 +52,17 @@ public class AuthController {
             throw new RuntimeException("Invalid credentials");
         }
 
+        // Generate token
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
-         String token = jwtUtil.generateToken(userDetails.getUsername());
+        String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        // Get user from DB to access role
+        User user = userRepository.findByEmail(authRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(new AuthResponse(token, user.getRole().name()));
     }
+
 
     @GetMapping("/api/user")
     public ResponseEntity<String> test() {

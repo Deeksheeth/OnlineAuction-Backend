@@ -8,7 +8,7 @@ import java.util.Optional;
 
 
 public interface AuctionService {
-        AuctionRequest createAuction(Long categoryId,AuctionRequest auctionRequest);
+        AuctionRequest createAuction(Long categoryId,AuctionRequest auctionRequest,String token);
         AuctionResponse viewAuction();
         AuctionRequest updateAuctionDetails(Long aucID,AuctionRequest auctionRequest);
         AuctionRequest deleteAuction(Long aucID);
