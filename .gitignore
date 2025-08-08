@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-OnlineAuction-Backend/src/main/resources/application.properties
+src/main/resources/application.properties
